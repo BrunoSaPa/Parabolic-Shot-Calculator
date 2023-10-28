@@ -35,8 +35,6 @@ def validar_choca_obstaculo(xObsc,yObsc,valores_teta,v,g,hf,h0,L):
 
     if((hf == yObsc and L == xObsc) or (h0 == yObsc and 0 == xObsc)):
         return (True,-200)
-    
-    
 
 
     if len(valores_teta) ==1:
@@ -292,8 +290,8 @@ def parabolic_trajectory(v,h0,hf,g,xObsc,yObsc,L,y, distancia_resorte):
             elif (valor_funcion[0]) == True and valor_funcion[1] == -100:
                 messagebox.showerror("Eror","Choca el Obstaculo (No es posible chocar el objetivo ya que la unica alternativa choca con el obstaculo)")
              
-            else:
-                messagebox.showerror("Eror","No es posible supera las altura o distancia maxima que se puede obtener")
+     else:
+         messagebox.showerror("Eror","No es posible supera las altura o distancia maxima que se puede obtener")
         
 
         
@@ -381,7 +379,7 @@ entradas_titulo.pack(expand=False, pady=20)
 
 
 #etiquetas menu de variables
-Label(menu_variables_frame, text="Variables", fg="#010101",font=("Helvetica", 10, "bold")).pack()
+Label(menu_variables_frame, text="Variables", fg="#010101",font=("Helvetica", 12, "bold")).pack()
 Label(menu_variables_frame, text="Masa del balón = m    Gravedad = g    Constante del resorte = k",fg="#010101",font=("Helvetica", 10)).pack()
 Label(menu_variables_frame, text="Distancia al centro del objetivo = L     Altura del suelo al objetivo = hf     Altura del disparador respecto al piso = ho",fg="#010101",font=("Helvetica", 10)).pack()
 Label(menu_variables_frame, text="Coordenada x del obstáculo = x   Coordenada y del obstáculo = y",fg="#010101",font=("Helvetica", 10)).pack()
@@ -449,7 +447,7 @@ for i in range(len(labels2)):
 
 # Etiquetas2
 labels2 = ["m",
-          "m", "x", "y"]
+          "m", "m", "m"]
 
 for i, label_text in enumerate(labels2):
     Label(variables_frame, text=label_text, fg="#010101",font=("Helvetica", 14, "italic")).grid(row=i+1, column=6, sticky="w")
