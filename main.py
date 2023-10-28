@@ -269,7 +269,7 @@ def parabolic_trajectory(v,h0,hf,g,xObsc,yObsc,L,y, distancia_resorte):
                 ax.plot(datos_x, y, label="Función Tiro Parabolico")
 
                 # Agrega el punto
-                ax.plot(xObsc, yObsc, 'ro', label="Obstaculo")
+                ax.plot(xObsc, yObsc, 'ro', label="Obstáculo")
                 ax.plot(0,h0, 'bo', label="Disparador")
                 ax.plot(L,hf, 'go', label="Objetivo")
 
