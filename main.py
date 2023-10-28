@@ -6,6 +6,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from PIL import Image, ImageTk
 from tkinter import messagebox
 
+
 def resolver_ecuacion_cuadratica(a, b, c):
     # Calculamos el discriminante
     discriminante = b**2 - 4*a*c
@@ -30,45 +31,32 @@ def resolver_ecuacion_cuadratica(a, b, c):
     
 
     
-    
 def validar_choca_obstaculo(xObsc,yObsc,valores_teta,v,g,hf,h0,L):
 
     if((hf == yObsc and L == xObsc) or (h0 == yObsc and 0 == xObsc)):
-        return (True,-100)
+        return (True,-200)
+    
+    
 
-    x = 0
 
     if len(valores_teta) ==1:
-        A = -g
-        B = 2*v*sin(radians(valores_teta[0]))
-        C = -2*yObsc
 
-        soluciones = resolver_ecuacion_cuadratica(A, B, C)
-
-        if(len(soluciones)==1):
-        
-            x = v * cos(radians(valores_teta[0]))*soluciones[0]
-
-            if(round(x,2) ==  round(xObsc,2)):
-                return(True,-100)
-                
-            else:
-                return(False,valores_teta[0])
-
-        elif (len(soluciones)==2):            
-            
-            x1 = v * cos(radians(valores_teta[0]))*soluciones[0]
-            x2 = v * cos(radians(valores_teta[0]))*soluciones[1]
-
-           
-            if(round(x1) == xObsc or round(x2) == round(xObsc)):
-                return(True,-100)
-              
-            else:
-                return(False,valores_teta[0])
-
-        elif (len(soluciones)==3):
+        if(xObsc> L):
             return(False,valores_teta[0])
+        
+        tiempo = xObsc/(v*cos(radians(valores_teta[0])))
+
+        y_cord= (v*sin(radians(valores_teta[0]))*tiempo - (g*tiempo**2)/2) + h0
+
+        print(f"ycord {y_cord}")
+
+
+        if(round(y_cord,2) == round(yObsc,2)):
+            return(True,-100)
+        else:
+            return(False,valores_teta[0])
+
+    
         
     elif len(valores_teta) ==2:
 
@@ -79,39 +67,21 @@ def validar_choca_obstaculo(xObsc,yObsc,valores_teta,v,g,hf,h0,L):
             angulo_final = valores_teta[0]
             angulo_opuesto = valores_teta[1]
 
-        A = -g
-        B = 2*v*sin(radians(angulo_final))
-        C = -2*yObsc
-
-        soluciones = resolver_ecuacion_cuadratica(A, B, C)
-
-        if(len(soluciones)==1):
-
-            x = v * cos(radians(angulo_final))*soluciones[0]
-
-            if(round(x,2) == round(xObsc,2)):
-                return(False,angulo_opuesto)
-            else:
-                return(False,angulo_final)
-
-        elif (len(soluciones)==2):            
-
-            x1 = v * cos(radians(angulo_final))*soluciones[0]
-            x2 = v * cos(radians(angulo_final))*soluciones[1]
-
-            print(f'x1 {x1}  x2{x2}')
-            print(f'xObsc{xObsc}   yObsc {yObsc}')
-
-
-
-            if((round(x1) == round(xObsc)) or (round(x2) == round(xObsc))):
-                return(False,angulo_opuesto)
-              
-            else:
-                return(False,angulo_final)
-
-        elif (len(soluciones)==3):
+        if(xObsc> L):
             return(False,angulo_final)
+            
+            
+        tiempo = xObsc/(v*cos(radians(angulo_final)))
+        y_cord= (v*sin(radians(angulo_final))*tiempo - (g*tiempo**2)/2 )+h0
+
+        print(f"ycord {y_cord}")
+
+        if(round(y_cord,2) == round(yObsc,2)):
+            return(False,angulo_opuesto)
+        else:
+            return(False,angulo_final)
+        
+
         
 
 def verificar_valores_maximos(v,h0,g,L,hf):
@@ -137,11 +107,11 @@ def es_numero(nuevo_valor):
     try:
      
         if(len(nuevo_valor)>=1):
-            if nuevo_valor[0] == "-":
+            if nuevo_valor[0] == "-" and len(nuevo_valor) == 1:
                 return True
             else:
                 numero = float(nuevo_valor)
-            return True
+                return True
         
     except ValueError:
         return False
@@ -157,20 +127,20 @@ def es_numeroPositivo(nuevo_valor):
         return False
 
 def validar_masa(nuevo_valor):
-    if es_numero(nuevo_valor) or nuevo_valor == "":
+    if es_numeroPositivo(nuevo_valor) or nuevo_valor == "":
         return True
     else:
         messagebox.showerror("Error", "Por favor, ingrese solo números en el campo de masa")
         return False
 
 def validar_gravedad(nuevo_valor):
-    if es_numero(nuevo_valor) or nuevo_valor == "":
+    if es_numeroPositivo(nuevo_valor) or nuevo_valor == "":
         return True
     else:
         messagebox.showerror("Error", "Por favor, ingrese solo números en el campo de gravedad")
         return False
 def validar_constante_resorte(nuevo_valor):
-    if es_numero(nuevo_valor) or nuevo_valor == "":
+    if es_numeroPositivo(nuevo_valor) or nuevo_valor == "":
         return True
     else:
         messagebox.showerror("Error", "Por favor, ingrese solo números en el campo de constante de resorte")
@@ -218,41 +188,15 @@ def habilitar_envio():
             return
     enviar_button.config(state=NORMAL)
 
-    
 
-def enviar_datos():
+def parabolic_trajectory(v,h0,hf,g,xObsc,yObsc,L,y, distancia_resorte):
+     # Crea una fuente más grande y en negritas
+     font_style = ("Helvetica", 14, "bold")
 
-    masa = float(entries[0].get())
-    gravedad = float(entries[1].get())
-    constante_resorte = float(entries[2].get())
-    altura_objetivo = float(entries[3].get())
-    altura_disparador = float(entries[4].get())
-    distancia_objetivo = float(entries[5].get())
-    obstaculo_x = float(entries[6].get())
-    obstaculo_y = float(entries[7].get())
+     
+     band = verificar_valores_maximos(v,h0,g,L,hf)
 
-       # Crea una fuente más grande y en negritas
-    font_style = ("Helvetica", 14, "bold")
-
-    distancia_resorte=1
-
-    v = sqrt((constante_resorte / masa) *distancia_resorte**2 )
-
-
-    h0=altura_disparador #Altura del disparador respecto al piso
-    hf= altura_objetivo #Altura del suelo al objetivo
-    L = distancia_objetivo
-    g= gravedad
-
-    y = hf-h0
-
-    #Coordenadas del obstaculo
-    xObsc = obstaculo_x
-    yObsc = obstaculo_y
-
-    band = verificar_valores_maximos(v,h0,g,L,hf)
-
-    if(band==True):
+     if(band==True):
 
         A = g*L**2
 
@@ -280,12 +224,7 @@ def enviar_datos():
             valores_teta = [-100,-100,-100]
 
         for valor in valores_teta:
-
-        
-            if len(valores_teta) == 3:
-                print("error")
-                break
-            else:
+            if len(valores_teta) >= 1 and len(valores_teta) <= 2:
                 print(f"valor {valor} grados")
 
 
@@ -296,10 +235,7 @@ def enviar_datos():
             valor_funcion = validar_choca_obstaculo(xObsc,yObsc,valores_teta,v,g,hf,h0,L)
 
             if(valor_funcion[0]) == False:
-                t = L/(v*cos(radians(valor_funcion[1])))
-                print(f"Ángulo: {valor_funcion[1]} grados, Tiempo de vuelo: {t} segundos")
-                print("No choca el obstaculo")
-
+              
                 angulo_final= valor_funcion[1]
 
 
@@ -310,7 +246,7 @@ def enviar_datos():
                 compresionL = Label(variables_salidas_frame, text=f'Compresión: {distancia_resorte*100}%', fg="#010101", font=font_style, bg="#D4D4D4")
                 compresionL.grid(row=0, column=1, sticky="nswe", pady=37.5, padx=(20))
 
-                print(f'v {v}')
+                print(f'vo :  {v}')
                 
              
                 datos_x = linspace(0,int(L), 10000)
@@ -349,13 +285,56 @@ def enviar_datos():
                 ax.legend()
            
                 canvas.draw()
-            else:        
-               
-               messagebox.showerror("Eror","Choca el Obstaculo")
-    else:
 
-        messagebox.showerror("Eror","No es posible supera las altura o distancia maxima que se puede obtener")
+            elif (valor_funcion[0]) == True and valor_funcion[1] == -200:        
+                messagebox.showerror("Eror","Choca el Obstaculo (Estan en las miasmas coordenadas de inicio o final)")
+            
+            elif (valor_funcion[0]) == True and valor_funcion[1] == -100:
+                messagebox.showerror("Eror","Choca el Obstaculo (No es posible chocar el objetivo ya que la unica alternativa choca con el obstaculo)")
+             
+            else:
+                messagebox.showerror("Eror","No es posible supera las altura o distancia maxima que se puede obtener")
+        
 
+        
+
+
+    
+
+def enviar_datos():
+
+    masa = float(entries[0].get())
+    gravedad = float(entries[1].get())
+    constante_resorte = float(entries[2].get())
+    altura_objetivo = float(entries[3].get())
+    altura_disparador = float(entries[4].get())
+    distancia_objetivo = float(entries[5].get())
+    obstaculo_x = float(entries[6].get())
+    obstaculo_y = float(entries[7].get())
+
+ 
+
+    h0=altura_disparador #Altura del disparador respecto al piso
+    hf= altura_objetivo #Altura del suelo al objetivo
+    L = distancia_objetivo
+    g= gravedad
+
+    y = hf-h0
+
+    #Coordenadas del obstaculo
+    xObsc = obstaculo_x
+    yObsc = obstaculo_y
+
+
+
+    distancia_resorte = 1
+    v = sqrt((constante_resorte / masa) * distancia_resorte ** 2)
+
+    parabolic_trajectory(v, h0, hf, g, xObsc, yObsc, L, y, distancia_resorte)
+
+
+      
+    
 
 
 def limpiar_campos():
@@ -388,7 +367,7 @@ raiz.geometry("1400x700")
 # entradas izquierda
 
 entradas_titulo_frame = Frame(raiz, bg="#F0EFEB")
-menu_variables_frame = Frame(raiz, width=700, bg="#F0EFEB")
+menu_variables_frame = Frame(raiz, width=700, bg="#F0EFEB", padx=(16))
 variables_frame = Frame(raiz, width=700, bg="#F0EFEB")
 botones_frame = Frame(raiz, width=700, bg="#F0EFEB")
 enviar_button = Button(botones_frame, text="Enviar", command=enviar_datos, bg=color_botones, fg="white", state=DISABLED, cursor='hand2',font=("Helvetica", 14, "bold"), border=0)
@@ -399,6 +378,14 @@ enviar_button.pack(side="left", fill="both", expand=True, padx=100, pady=(2,60))
 
 entradas_titulo = Label(entradas_titulo_frame, text="Entradas",font=("Helvetica", 16, "bold"), fg="#010101")
 entradas_titulo.pack(expand=False, pady=20)
+
+
+#etiquetas menu de variables
+Label(menu_variables_frame, text="Variables", fg="#010101",font=("Helvetica", 10, "bold")).pack()
+Label(menu_variables_frame, text="Masa del balón = m    Gravedad = g    Constante del resorte = k",fg="#010101",font=("Helvetica", 10)).pack()
+Label(menu_variables_frame, text="Distancia al centro del objetivo = L     Altura del suelo al objetivo = hf     Altura del disparador respecto al piso = ho",fg="#010101",font=("Helvetica", 10)).pack()
+Label(menu_variables_frame, text="Coordenada x del obstáculo = x   Coordenada y del obstáculo = y",fg="#010101",font=("Helvetica", 10)).pack()
+
 
 
 # Etiquetas 1
@@ -416,7 +403,7 @@ validaciones = [validar_masa, validar_gravedad, validar_constante_resorte,
                 validar_altura_objetivo]
 
 for i in range(len(labels)):
-    entry = Entry(variables_frame, bg=color_campos,font=("Helvetica", 14), cursor='hand1')
+    entry = Entry(variables_frame, bg=color_campos,font=("Helvetica", 14), cursor='hand2')
 
     # Asignar función de validación si está definida
     if validaciones[i]:
@@ -449,7 +436,7 @@ validaciones = [validar_altura_disparador,
                 validar_distancia_objetivo, validar_obstaculo_x, validar_obstaculo_y]
 
 for i in range(len(labels2)):
-    entry = Entry(variables_frame, bg=color_campos,font=("Helvetica", 14), cursor='hand1')
+    entry = Entry(variables_frame, bg=color_campos,font=("Helvetica", 14), cursor='hand2')
 
     # Asignar función de validación si está definida
     if validaciones[i]:
