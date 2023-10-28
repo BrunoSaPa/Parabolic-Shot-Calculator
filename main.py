@@ -380,9 +380,9 @@ entradas_titulo.pack(expand=False, pady=20)
 
 #etiquetas menu de variables
 Label(menu_variables_frame, text="Variables", fg="#010101",font=("Helvetica", 12, "bold")).pack()
-Label(menu_variables_frame, text="Masa del balón = m    Gravedad = g    Constante del resorte = k",fg="#010101",font=("Helvetica", 10)).pack()
-Label(menu_variables_frame, text="Distancia al centro del objetivo = L     Altura del suelo al objetivo = hf     Altura del disparador respecto al piso = ho",fg="#010101",font=("Helvetica", 10)).pack()
-Label(menu_variables_frame, text="Coordenada x del obstáculo = x   Coordenada y del obstáculo = y",fg="#010101",font=("Helvetica", 10)).pack()
+Label(menu_variables_frame, text="Masa del balón = m    Gravedad = g    Constante del resorte = k",fg="#010101",font=("Helvetica", 10, "italic")).pack()
+Label(menu_variables_frame, text="Distancia al centro del objetivo = L     Altura del suelo al objetivo = hf     Altura del disparador respecto al piso = ho",fg="#010101",font=("Helvetica", 10, "italic")).pack()
+Label(menu_variables_frame, text="Coordenada x del obstáculo = x   Coordenada y del obstáculo = y",fg="#010101",font=("Helvetica", 10, "italic")).pack()
 
 
 
