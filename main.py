@@ -210,6 +210,7 @@ def parabolic_trajectory(v,h0,hf,g,xObsc,yObsc,L,y, distancia_resorte):
     elif len(soluciones) == 3:
         valores_tetha = [-100,-100,-100]
 
+
     #ciclo para imprimir los angulos de la solucion en la terminal
     for valor in valores_tetha:
         if len(valores_tetha) >= 1 and len(valores_tetha) <= 2:
@@ -231,7 +232,7 @@ def parabolic_trajectory(v,h0,hf,g,xObsc,yObsc,L,y, distancia_resorte):
             compresionL.grid(row=0, column=1, sticky="nswe", pady=37.5, padx=(20))
                 
             #determinacion de valores para datos x
-            datos_x = linspace(0,int(L), 10000)
+            datos_x = linspace(0,(L), 10000)
             ax.clear()  # Limpia la gráfica anterior
 
             y = []
