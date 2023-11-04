@@ -216,6 +216,8 @@ def parabolic_trajectory(v,h0,hf,g,xObsc,yObsc,L,y, distancia_resorte):
         if len(valores_tetha) >= 1 and len(valores_tetha) <= 2:
             print(f"valor {valor} grados")
 
+    print("--------------------------------------------------------")
+
     #cuando tetha tenga soluciones reales
     if(len(valores_tetha) >=1 and len(valores_tetha) <=2):
 
@@ -474,7 +476,5 @@ variables_salidas_frame.grid(row= 2, column= 2, columnspan=2, sticky="wens")
 grafica_frame.grid(row= 3, column=2 ,columnspan=2, rowspan=4, sticky="wens")
 
 raiz.rowconfigure(3, weight=1)
-
-
 
 raiz.mainloop()
